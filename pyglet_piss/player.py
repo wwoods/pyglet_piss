@@ -6,7 +6,7 @@ class Player(object):
     """A base-class representation of a player as a distinct input system.
     """
     
-    _base_id = 1
+    _base_id = 0
     _base_id_doc = """Incrementing series ID for each player"""
     
     def __init__(self):
