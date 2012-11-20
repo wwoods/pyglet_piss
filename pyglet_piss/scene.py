@@ -1,9 +1,13 @@
 
+import pyglet
 from pyglet_piss.layer import Layer
 
 class Scene(object):
     """A scene is a collection of layers that make up a single user experience.
     """
+    
+    showFps = False
+    showFps_doc = """Set to True to show the FPS in the lower-left corner"""
     
     @property
     def window(self):
@@ -49,6 +53,9 @@ class Scene(object):
         self.onDraw()
         for l in self._layers:
             l.onDraw()
+            
+        if self.showFps:
+            self.__fps.draw()
         
     
     def _sceneInit(self, app):
@@ -58,6 +65,7 @@ class Scene(object):
         
         self._isInit = True
         self.app = app
+        self.__fps = pyglet.clock.ClockDisplay()
         
         
     def _sceneUpdate(self, dt):
