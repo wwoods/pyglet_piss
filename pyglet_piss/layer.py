@@ -50,7 +50,7 @@ class Layer(object):
     def remove(self):
         """Removes self from app's layers.
         """
-        self.scene.layers.remove(self)
+        self.scene.removeLayer(self)
         
     
     def quitScene(self):

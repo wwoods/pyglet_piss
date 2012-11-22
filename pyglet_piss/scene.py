@@ -37,6 +37,10 @@ class Scene(object):
         self.app.removeScene(self)
         
         
+    def removeLayer(self, layer):
+        self._layers.remove(layer)
+        
+        
     def _sceneAction(self, player, action):
         """Call onAction() for each layer until one returns True.
         """

@@ -6,12 +6,12 @@ class Player(object):
     """A base-class representation of a player as a distinct input system.
     """
     
-    _base_id = 0
-    _base_id_doc = """Incrementing series ID for each player"""
+    nextId = 0
+    nextId_doc = """Incrementing series ID for each player"""
     
     def __init__(self):
-        self.id = Player._base_id
-        Player._base_id += 1
+        self.id = Player.nextId
+        Player.nextId += 1
         self.actions = []
         self.actions_doc = """Actions queued and waiting processing"""
         self._recurring = {}
@@ -56,8 +56,8 @@ class Player(object):
                 time += Actions.RECURRING_INTERVAL
                 self.actions.append(action)
             self._recurring[action] = time
-    
-        
+
+
 
 class JoystickPlayer(Player):
     """Joystick input!"""
@@ -121,4 +121,41 @@ class JoystickPlayer(Player):
     def _onRelease(self, joystick, button):
         realBtn = self._buttonMap.get(button, Actions.BTN_BASE + button)
         self.stopAction(realBtn)
+        
+        
+class KeyboardPlayer(Player):
+    """Keyboard input!"""
+    
+    def __init__(self, mappings):
+        Player.__init__(self)
+        for m, v in mappings.iteritems():
+            action = m.upper()
+            key = v.upper()
+            
+            # resolve key to enum'd value, if possible.
+            try:
+                key = int(key)
+            except ValueError:
+                key = pyglet.window.key.__dict__[key]
+                
+            # resolve action
+            action = Actions.__dict__[action]
+            
+            self._buttonMap[key] = action
+            
+        # Input handling is bound in application init
+            
+            
+    def _onPress(self, key, modifiers):
+        action = self._buttonMap.get(key)
+        if action is None:
+            return
+        self.startAction(action)
+        
+        
+    def _onRelease(self, key, modifiers):
+        action = self._buttonMap.get(key)
+        if action is None:
+            return
+        self.stopAction(action)
 
