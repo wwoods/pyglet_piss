@@ -18,10 +18,11 @@ class Application(object):
         myDisp = pyglet.window.get_platform().get_default_display()
         screen = myDisp.get_default_screen()
         
-        fullscreen = config.get('display', {}).get('fullscreen', False)
+        dispConfig = config.get('display', {})
+        fullscreen = dispConfig.get('fullscreen', False)
         if fullscreen:
-            width = screen.width
-            height = screen.height
+            width = dispConfig.get('width') or screen.width
+            height = dispConfig.get('height') or screen.height
         else:
             width = 1024
             height = width * screen.height / screen.width
