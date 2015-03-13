@@ -1,6 +1,8 @@
 
 from pyglet_piss.lib.reprconf import Config as _reprConfig
 
+import six
+
 class Config(_reprConfig):
     """Extension of reprconf that allows saving back to the last file specified
     in an update() call.
@@ -25,7 +27,7 @@ class Config(_reprConfig):
             if noExistOk:
                 return
             raise
-        for k, v in other.iteritems():
+        for k, v in six.iteritems(other):
             mergeFrom = self.get(k, {})
             mergeFrom.update(v)
             self[k] = mergeFrom
@@ -38,9 +40,9 @@ class Config(_reprConfig):
         # if there's an error, we don't screw up the old file by only
         # writing part of the output
         bufferOut = []
-        for s, v in self.iteritems():
+        for s, v in six.iteritems(self):
             bufferOut.append('[{0}]\n'.format(s))
-            for k, kv in v.iteritems():
+            for k, kv in six.iteritems(v):
                 bufferOut.append('{0} = {1}\n'.format(k, repr(kv)))
             bufferOut.append('\n')
         bufferOut = ''.join(bufferOut)

@@ -19,7 +19,7 @@ if __name__ == '__main__':
           package_data = {},
           data_files = [],
           zip_safe = True,
-          install_requires = [ 'pyglet' ],
+          install_requires = [ 'pyglet', 'six' ],
           entry_points = """
           # -*- Entry points: -*-
           """

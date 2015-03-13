@@ -1,7 +1,8 @@
 
-import pyglet
-
 from pyglet_piss.player import JoystickPlayer, KeyboardPlayer
+
+import pyglet
+import six
 
 class Application(object):
     """Main pyglet_piss application object.  Handles input and layers.
@@ -24,8 +25,9 @@ class Application(object):
             width = dispConfig.get('width') or screen.width
             height = dispConfig.get('height') or screen.height
         else:
-            width = 1024
-            height = width * screen.height / screen.width
+            width = dispConfig.get('width', 1024)
+            height = dispConfig.get('height', 
+                    int(width * screen.height / screen.width))
         self.window = pyglet.window.Window(width = width, height = height,
                 fullscreen = fullscreen)
 
@@ -37,7 +39,7 @@ class Application(object):
         # Any keyboard players?
         joysticks = pyglet.input.get_joysticks()
         possibleKeyboards = []
-        for k, mappings in self.conf.iteritems():
+        for k, mappings in six.iteritems(self.conf):
             if k.startswith('keyboard_player_'):
                 replaceWithJoystick = mappings.pop('replaceWithJoystick', True)
                 if replaceWithJoystick:

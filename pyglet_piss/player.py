@@ -2,6 +2,8 @@
 import pyglet
 from pyglet_piss.actions import Actions
 
+import six
+
 class Player(object):
     """A base-class representation of a player as a distinct input system.
     """
@@ -128,7 +130,7 @@ class KeyboardPlayer(Player):
     
     def __init__(self, mappings):
         Player.__init__(self)
-        for m, v in mappings.iteritems():
+        for m, v in six.iteritems(mappings):
             action = m.upper()
             key = v.upper()
             
