@@ -20,7 +20,8 @@ class Scene(object):
         
     def addLayer(self, layer):
         self._layers.append(layer)
-        layer._layerInit(self)
+        if layer.scene != self:
+            layer._layerInit(self)
         
         
     def onDraw(self):

@@ -6,6 +6,10 @@ class Layer(object):
     suspendsLower = False
     suspendsLower_doc = """True if any lower layers' update functions
             should not be called (drawing still occurs)."""
+
+    scissorBox_doc = """Tuple of (x, y, w, h) in gl window coordinates.  Scissor
+            test will be applied if this is set.  It is up to the scene to adjust
+            its rendering process to self.scissorBox as desired."""
             
     @property
     def players(self):
@@ -18,6 +22,8 @@ class Layer(object):
 
     def __init__(self):
         self.__isInit = False
+        self.scene = None
+        self.scissorBox = None
         
     
     def onAction(self, player, action):
@@ -41,10 +47,10 @@ class Layer(object):
         """Push a layer on top of this one; if this layer is not yet added
         to the hierarchy, the new layer will be added after this one once
         this layer is added."""
-        if self.app is None:
+        if self.scene is None:
             self.__layers.append(layer)
         else:
-            self.app.addLayer(layer)
+            self.scene.addLayer(layer)
         
     
     def remove(self):

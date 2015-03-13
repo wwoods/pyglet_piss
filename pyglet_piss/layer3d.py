@@ -30,7 +30,10 @@ class Layer3d(Layer):
     def _go2d(self):
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
+
         w = self.window
+        if self.scissorBox is not None:
+            glViewport(0, 0, w.width, w.height)
         gluOrtho2D(0, w.width, 0, w.height)
         glMatrixMode(GL_MODELVIEW)
         glLoadIdentity()
@@ -40,6 +43,9 @@ class Layer3d(Layer):
     def _go3d(self):
         glClearDepth(1.0)
         glClear(GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT)
+
+        if self.scissorBox is not None:
+            glViewport(*self.scissorBox)
         
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
