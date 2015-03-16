@@ -2,7 +2,7 @@
 players on one machine, e.g. arcade games)
 """
 
-import pyglet_piss.app as app
+from pyglet_piss.app import instance as app
 from pyglet_piss.actions import Actions
 from pyglet_piss.layer import Layer
 from pyglet_piss.layer3d import Layer3d
