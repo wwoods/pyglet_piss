@@ -99,11 +99,12 @@ class Application(object):
         self.conf = config
 
         myDisp = pyglet.window.get_platform().get_default_display()
-        screen = myDisp.get_default_screen()
+        screens = myDisp.get_screens()
 
-        for scene in scenes:
+        for i, scene in enumerate(scenes):
             dispConfig = config.get('display', {})
             fullscreen = dispConfig.get('fullscreen', False)
+            screen = screens[i % len(screens)]
             if fullscreen:
                 width = dispConfig.get('width') or screen.width
                 height = dispConfig.get('height') or screen.height
@@ -112,7 +113,7 @@ class Application(object):
                 height = dispConfig.get('height',
                         int(width * screen.height / screen.width))
             w = pyglet.window.Window(width = width, height = height,
-                    fullscreen = fullscreen)
+                    fullscreen = fullscreen, screen = screen)
             aw = _ApplicationWindow(self, w, scene)
             self._windows.append(aw)
 
