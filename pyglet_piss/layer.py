@@ -73,6 +73,13 @@ class Layer(object):
 
 
     @property
+    def center(self):
+        """Returns the local-space center of this layer."""
+        cl = self.coordsLocal
+        return (cl[0] + cl[2] * 0.5, cl[1] + cl[3] * 0.5)
+
+
+    @property
     def coordsLocal(self):
         """Returns (left, bottom, w, h) for local-space."""
         # Calculate our centers and half-dimensions, and the screen aspect
@@ -174,6 +181,14 @@ class Layer(object):
         if self._scissorBox is None:
             return self.scene.height
         return self._scissorBox[3]
+
+
+    @property
+    def screenScale(self):
+        """Returns the scale from local to screen coordinates."""
+        cl = self.coordsLocal
+        cs = self.coordsScreen
+        return max(cs[2] / cl[2], cs[3] / cl[3])
 
 
     @property
@@ -284,6 +299,24 @@ class Layer(object):
         self.scene.quitScene()
 
 
+    def translateForPixels(self, x, y):
+        """Returns a context manager that translates to x, y in local coords and
+        then changes the scaling so that subsequent rendering happens in
+        pixel space.  Useful to get around scaling."""
+        cl = self.coordsLocal
+        cs = self.coordsScreen
+        gl.glMatrixMode(gl.GL_PROJECTION)
+        gl.glPushMatrix()
+        gl.glLoadIdentity()
+        gl.gluOrtho2D(cs[0], cs[2], cs[1], cs[3])
+        gl.glMatrixMode(gl.GL_MODELVIEW)
+        gl.glPushMatrix()
+        gl.glLoadIdentity()
+        s = self._layerMapToScreen(x, y)
+        gl.glTranslatef(s[0], s[1], 0.0)
+        return _RestoreProjectionAndModelview()
+
+
     def _layerInit(self, scene):
         """Called when added to application (added to scene) for first
         time.
@@ -333,3 +366,27 @@ class Layer(object):
         gl.glMatrixMode(gl.GL_PROJECTION)
         gl.glPopMatrix()
         gl.glMatrixMode(gl.GL_MODELVIEW)
+
+
+    def _layerMapToScreen(self, localX, localY):
+        """maps a local x and y to screen coords."""
+        cl = self.coordsLocal
+        cs = self.coordsScreen
+
+        interpX = (localX - cl[0]) / cl[2]
+        interpY = (localY - cl[1]) / cl[3]
+        return (cs[0] + interpX * cs[2], cs[1] + interpY * cs[3])
+
+
+
+class _RestoreProjectionAndModelview(object):
+    def __enter__(self):
+        return self
+
+
+    def __exit__(self, typ, val, tb):
+        if typ is None:
+            gl.glMatrixMode(gl.GL_PROJECTION)
+            gl.glPopMatrix()
+            gl.glMatrixMode(gl.GL_MODELVIEW)
+            gl.glPopMatrix()
