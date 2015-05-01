@@ -304,7 +304,7 @@ class Layer(object):
         then changes the scaling so that subsequent rendering happens in
         pixel space.  Useful to get around scaling."""
         cl = self.coordsLocal
-        cs = self.coordsScreen
+        cs = (0, 0, self.scene.width, self.scene.height)
         gl.glMatrixMode(gl.GL_PROJECTION)
         gl.glPushMatrix()
         gl.glLoadIdentity()

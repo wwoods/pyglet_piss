@@ -51,6 +51,10 @@ class Scene(object):
         have their onUpdate() called."""
 
 
+    def postDraw(self):
+        """Called after this scene's layers on drawn"""
+
+
     def quitScene(self):
         """Close this scene"""
         self.window.removeScene(self)
@@ -80,6 +84,7 @@ class Scene(object):
             l.preDraw()
             l.onDraw()
             l.postDraw()
+        self.postDraw()
 
         if self.showFps:
             self.__fps.draw()
