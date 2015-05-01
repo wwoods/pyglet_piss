@@ -73,6 +73,20 @@ class Layer(object):
 
 
     @property
+    def boundsLocal(self):
+        """Returns (left, bottom, right, top) for local-space"""
+        cl = self.coordsLocal
+        return (cl[0], cl[1], cl[0] + cl[2], cl[1] + cl[3])
+
+
+    @property
+    def boundsScreen(self):
+        """Returns (left, bottom, right, top) for screen-space."""
+        cl = self.coordsScreen
+        return (cl[0], cl[1], cl[0] + cl[2], cl[1] + cl[3])
+
+
+    @property
     def center(self):
         """Returns the local-space center of this layer."""
         cl = self.coordsLocal
