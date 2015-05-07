@@ -55,6 +55,10 @@ class Scene(object):
         have their onUpdate() called."""
 
 
+    def preDraw(self):
+        """Called before scene's layers are drawn"""
+
+
     def postDraw(self):
         """Called after this scene's layers on drawn"""
 
@@ -83,6 +87,7 @@ class Scene(object):
 
     def _sceneDraw(self):
         """Draw self, then all layers"""
+        self.preDraw()
         self.onDraw()
         for l in self._layers:
             l.preDraw()
