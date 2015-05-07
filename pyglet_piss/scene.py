@@ -1,4 +1,6 @@
 
+from .common import frameCachedProperty
+
 import pyglet
 from pyglet_piss.layer import Layer
 
@@ -10,12 +12,14 @@ class Scene(object):
     showFps_doc = """Set to True to show the FPS in the lower-left corner"""
 
     @property
+    @frameCachedProperty
     def height(self):
         """Returns the window height"""
         return self._window.height
 
 
     @property
+    @frameCachedProperty
     def width(self):
         """Returns the window width"""
         return self._window.width
@@ -88,6 +92,8 @@ class Scene(object):
 
         if self.showFps:
             self.__fps.draw()
+
+        frameCachedProperty.clear(self)
 
 
     def _sceneInit(self, window):

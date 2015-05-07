@@ -1,4 +1,6 @@
 
+from .common import frameCachedProperty
+
 import pyglet.gl as gl
 
 class Layer(object):
@@ -94,6 +96,7 @@ class Layer(object):
 
 
     @property
+    @frameCachedProperty
     def coordsLocal(self):
         """Returns (left, bottom, w, h) for local-space."""
         # Calculate our centers and half-dimensions, and the screen aspect
@@ -272,6 +275,8 @@ class Layer(object):
         if self._scissorBox is not None:
             gl.glDisable(gl.GL_SCISSOR_TEST)
 
+        frameCachedProperty.clear(self)
+
 
     def pushLayer(self, layer):
         """Push a layer on top of this one; if this layer is not yet added
@@ -317,7 +322,6 @@ class Layer(object):
         """Returns a context manager that translates to x, y in local coords and
         then changes the scaling so that subsequent rendering happens in
         pixel space.  Useful to get around scaling."""
-        cl = self.coordsLocal
         cs = (0, 0, self.scene.width, self.scene.height)
         gl.glMatrixMode(gl.GL_PROJECTION)
         gl.glPushMatrix()
