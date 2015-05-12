@@ -82,6 +82,12 @@ class Application(object):
             if isinstance(p, KeyboardPlayer):
                 p._onPress(key, modifiers)
 
+        if key == pyglet.window.key.ESCAPE:
+            # Rather than closing just the active window (may be more than
+            # one!), close all windows and exit the application.
+            pyglet.app.exit()
+            return pyglet.event.EVENT_HANDLED
+
 
     def onKeyUp(self, key, modifiers):
         for p in self.players:
