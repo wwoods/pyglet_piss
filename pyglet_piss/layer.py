@@ -82,6 +82,7 @@ class Layer(object):
 
 
     @property
+    @frameCachedProperty
     def boundsScreen(self):
         """Returns (left, bottom, right, top) for screen-space."""
         cl = self.coordsScreen
@@ -108,9 +109,9 @@ class Layer(object):
         if self._scissorBox is None:
             if self.localBounds is None:
                 return (0, 0, self.scene.width, self.scene.height)
-            sa = self.scene.width * 1.0 / self.scene.height
+            sa = max(1., self.scene.width) / max(1., self.scene.height)
         else:
-            sa = self._scissorBox[2] * 1.0 / self._scissorBox[3]
+            sa = max(1., self._scissorBox[2]) / max(1., self._scissorBox[3])
 
         if self.localBounds is None:
             lx = self.scene.width * 0.5
@@ -164,8 +165,11 @@ class Layer(object):
     def coordsScreen(self):
         """Returns (left, bottom, w, h) for screen-space."""
         if self._scissorBox is None:
-            return (0, 0, self.scene.width, self.scene.height)
-        return self._scissorBox
+            return (0, 0, max(1, self.scene.width), max(1, self.scene.height))
+        sbCopy = list(self._scissorBox)
+        sbCopy[2] = max(1, sbCopy[2])
+        sbCopy[3] = max(1, sbCopy[3])
+        return sbCopy
 
 
     @property
